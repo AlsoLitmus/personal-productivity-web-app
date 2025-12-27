@@ -82,7 +82,6 @@ int main()
 
 				doSomething(username);
 
-				//std::vector<string> tasks;
 				std::vector<std::vector<string>> tasks;
 				int chosenChoice = 0;
 				int EXIT_OPTION = 5;
@@ -98,5 +97,6 @@ int main()
 		}
 	}	
 }
+
 
 
