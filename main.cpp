@@ -8,18 +8,20 @@ using namespace std;
 
 int main()
 {
+	// Variables
 	int choice;
 	bool onLoginMenu = true;
 	bool userAlreadyExists = true;
 	ofstream fileOfRegisteredUsers;
 	fileOfRegisteredUsers.open("registeredUsers.txt", ios::app);
 
-
+	// while we are still on the login menu...  
 	while (onLoginMenu) {
 
 		displayMenu();
 		choice = getInput();
 
+		// if the user wants to register an account...
 		if (choice == 1) {
 			string username, password;
 			cout << "Select a username: ";
@@ -66,7 +68,7 @@ int main()
 			fileOfRegisteredUsers << username << endl;
 			fileOfRegisteredUsers.close();
 		}
-		else if (choice == 2) {
+		else if (choice == 2) { // if the user want to sign into an account
 			string username;
 			bool status = LoggingIn(username);
 			while (!status) {
@@ -78,13 +80,21 @@ int main()
 				cout << "Login Successful!" << endl;
 				system("PAUSE");
 
-
 				doSomething(username);
 
-				displayMainMenu();
-				return 1;
+				std::vector<string> tasks;
+				int chosenChoice = 0;
+				int EXIT_OPTION = 5;
+
+				while (chosenChoice != EXIT_OPTION) {
+					displayMainMenu();
+					chosenChoice = getChoice(tasks);
+				}
+
+				return 0;
 
 			}
 		}
 	}	
 }
+
