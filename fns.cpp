@@ -57,7 +57,6 @@ void displayMainMenu() {
 	std::cout << "5. Exit" << std::endl;
 }
 
-
 int getChoice(std::vector<std::vector<std::string>>& tasks) {
 	int choice;
 	std::cout << "Enter your choice (1-5): ";
@@ -101,6 +100,8 @@ int getChoice(std::vector<std::vector<std::string>>& tasks) {
 void createTask(std::vector<std::vector<std::string>> &tasks) {
   std::string task;  
   std::string dueDate;  
+  std::string priorityLevel;
+
   std::cout << "Enter a task: ";  
   std::cin.ignore();  
   std::getline(std::cin, task);  
@@ -108,8 +109,11 @@ void createTask(std::vector<std::vector<std::string>> &tasks) {
   std::cout << "Enter due date (YYYY-MM-DD): ";  
   std::getline(std::cin, dueDate);  
 
+  std::cout << "Enter priority level (Low, Medium, High): ";
+  std::getline(std::cin, priorityLevel);
+
   std::cout << "Task '" << task << "' created successfully!" << std::endl;  
-  tasks.push_back(std::vector<std::string>{task, dueDate}); // Use double braces to fix the initializer issue
+  tasks.push_back(std::vector<std::string>{task, dueDate, priorityLevel}); // Use double braces to fix the initializer issue
 }
 
 void editTask(std::vector<std::vector<std::string>>& tasks)
@@ -139,7 +143,12 @@ void editTask(std::vector<std::vector<std::string>>& tasks)
 	std::cout << "Enter the new due date (YYYY-MM-DD): ";
 	std::string newDueDate;
 	std::getline(std::cin, newDueDate);
-	std::vector<std::string> newTaskArray = { newTask, newDueDate };
+
+	std::cout << "Enter the new priority level (Low, Medium, High): ";
+	std::string priorityLevel;
+	std::getline(std::cin, priorityLevel);
+
+	std::vector<std::string> newTaskArray = { newTask, newDueDate, priorityLevel };
 
 	tasks[taskNumber - 1] = newTaskArray;
 	std::cout << "Task updated successfully!" << std::endl;
@@ -178,9 +187,12 @@ void viewTasks(std::vector<std::vector<std::string>>& tasks) {
 		return;
 	}
 	std::cout << "\nHere are your current tasks:" << std::endl;
-	std::cout << std::setw(10) << std::left << "Task #" << std::left << std::setw(30) << "Tasks" << std::left << std::setw(10) << std::right << "Date Due" << std::endl;
+	std::cout << std::setw(10) << std::left << "Task #" << std::left << std::setw(30) << "Tasks" << std::left << std::setw(10) << std::left << "Date Due" 
+		<< std::right << std::setw(20) << "Priority Level" << std::endl;
 	for (size_t i = 0; i < tasks.size(); ++i) {
-		std::cout << std::setw(10) << std::left << i + 1 << std::left << std::setw(30) << tasks[i][0] << std::left << std::setw(10) << std::right << tasks[i][1] << std::endl;
+		std::cout << std::setw(10) << std::left << i + 1 << std::left << std::setw(30) << tasks[i][0] << std::left << std::setw(10) << std::left << tasks[i][1] 
+			<< std::right << std::setw(20) << tasks[i][2] << std::endl;
 	}
 }
+
 
