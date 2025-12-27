@@ -9,10 +9,11 @@ void displayMenu();
 int getInput();  
 void doSomething(std::string &username);  
 void displayMainMenu();  
-int getChoice(std::vector<std::string>& t);  
-void createTask(std::vector<std::string>& t);  
-void editTask(std::vector<std::string>& t);  
-void deleteTask(std::vector<std::string>& t);  
-void viewTasks(std::vector<std::string>& t);  
+int getChoice(std::vector<std::vector<std::string>> &tasks);
+void createTask(std::vector<std::vector<std::string>> &tasks);
+void editTask(std::vector<std::vector<std::string>> &tasks);
+void deleteTask(std::vector<std::vector<std::string>> &tasks);
+void viewTasks(std::vector<std::vector<std::string>> &tasks);
 
 #endif
+
