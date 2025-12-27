@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <iomanip>
 #include "fns.h"
 
 bool LoggingIn(std::string &username) {
@@ -57,7 +58,7 @@ void displayMainMenu() {
 }
 
 
-int getChoice(std::vector<std::string>& tasks) {
+int getChoice(std::vector<std::vector<std::string>>& tasks) {
 	int choice;
 	std::cout << "Enter your choice (1-5): ";
 	std::cin >> choice;
@@ -97,27 +98,23 @@ int getChoice(std::vector<std::string>& tasks) {
 	return choice;
 }
 
-void createTask(std::vector<std::string>& tasks) {
+void createTask(std::vector<std::vector<std::string>> &tasks) {
+  std::string task;  
+  std::string dueDate;  
+  std::cout << "Enter a task: ";  
+  std::cin.ignore();  
+  std::getline(std::cin, task);  
 
-	std::string task;
-	std::cout << "Enter a task: ";
-	std::cin.ignore();
-	std::getline(std::cin, task);
-	std::cout << "Task '" << task << "' created successfully!" << std::endl;
-	tasks.push_back(task);
+  std::cout << "Enter due date (YYYY-MM-DD): ";  
+  std::getline(std::cin, dueDate);  
 
+  std::cout << "Task '" << task << "' created successfully!" << std::endl;  
+  tasks.push_back(std::vector<std::string>{task, dueDate}); // Use double braces to fix the initializer issue
 }
 
-void editTask(std::vector<std::string>& tasks)
+void editTask(std::vector<std::vector<std::string>>& tasks)
 {
-	if (tasks.empty()) {
-		std::cout << "No tasks available to edit." << std::endl;
-		return;
-	}
-	std::cout << "\nHere are your current tasks:" << std::endl;
-	for (size_t i = 0; i < tasks.size(); ++i) {
-		std::cout << i + 1 << ". " << tasks[i] << std::endl;
-	}
+	viewTasks(tasks);
 	int taskNumber;
 	std::cout << "Enter the number of the task you want to edit: ";
 	std::cin >> taskNumber;
@@ -138,20 +135,18 @@ void editTask(std::vector<std::string>& tasks)
 	std::string newTask;
 	std::cout << "Enter the new description for the task: ";
 	std::getline(std::cin, newTask);
-	tasks[taskNumber - 1] = newTask;
+
+	std::cout << "Enter the new due date (YYYY-MM-DD): ";
+	std::string newDueDate;
+	std::getline(std::cin, newDueDate);
+	std::vector<std::string> newTaskArray = { newTask, newDueDate };
+
+	tasks[taskNumber - 1] = newTaskArray;
 	std::cout << "Task updated successfully!" << std::endl;
 }
 
-void deleteTask(std::vector<std::string>& tasks) {
-	if (tasks.empty()) {
-		std::cout << "No tasks available to edit." << std::endl;
-		return;
-	}
-
-	std::cout << "\nHere are your current tasks:" << std::endl;
-	for (size_t i = 0; i < tasks.size(); ++i) {
-		std::cout << i + 1 << ". " << tasks[i] << std::endl;
-	}
+void deleteTask(std::vector<std::vector<std::string>>& tasks) {
+	viewTasks(tasks);
 
 	int taskNumber;
 	std::cout << "Enter the number of the task you want to delete: ";
@@ -176,13 +171,16 @@ void deleteTask(std::vector<std::string>& tasks) {
 
 }
 
-void viewTasks(std::vector<std::string>& tasks) {
+void viewTasks(std::vector<std::vector<std::string>>& tasks) {
+
 	if (tasks.empty()) {
 		std::cout << "No tasks available." << std::endl;
 		return;
 	}
 	std::cout << "\nHere are your current tasks:" << std::endl;
+	std::cout << std::setw(10) << std::left << "Task #" << std::left << std::setw(30) << "Tasks" << std::left << std::setw(10) << std::right << "Date Due" << std::endl;
 	for (size_t i = 0; i < tasks.size(); ++i) {
-		std::cout << i + 1 << ". " << tasks[i] << std::endl;
+		std::cout << std::setw(10) << std::left << i + 1 << std::left << std::setw(30) << tasks[i][0] << std::left << std::setw(10) << std::right << tasks[i][1] << std::endl;
 	}
 }
+
