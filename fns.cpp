@@ -97,6 +97,16 @@ int getChoice(std::vector<std::vector<std::string>>& tasks) {
 	return choice;
 }
 
+bool checkDateFormatting(const std::string& date) {
+	if (date.length() != 10) return false;
+	if (date[4] != '-' || date[7] != '-') return false;
+	for (size_t i = 0; i < date.length(); ++i) {
+		if (i == 4 || i == 7) continue;
+		if (!isdigit(date[i])) return false;
+	}
+	return true;
+}
+
 void createTask(std::vector<std::vector<std::string>> &tasks) {
   std::string task;  
   std::string dueDate;  
@@ -109,8 +119,29 @@ void createTask(std::vector<std::vector<std::string>> &tasks) {
   std::cout << "Enter due date (YYYY-MM-DD): ";  
   std::getline(std::cin, dueDate);  
 
+  // Ensure that the user is typing the date in the proper format.
+  bool dateIsFormattedCorrectly = checkDateFormatting(dueDate);
+
+  if (dateIsFormattedCorrectly) {
+	  std::cout << "Date formatted correctly." << std::endl;
+  }
+  else {
+	  std::cout << "Date not formatted correctly. Please use the format YYYY-MM-DD." << std::endl;
+	  while (dateIsFormattedCorrectly == false) {
+		  std::cout << "Enter due date (YYYY-MM-DD): ";
+		  std::getline(std::cin, dueDate);
+		  dateIsFormattedCorrectly = checkDateFormatting(dueDate);
+	  }
+  }
+
   std::cout << "Enter priority level (Low, Medium, High): ";
   std::getline(std::cin, priorityLevel);
+
+  // Now check if user has entered a valid priority level.
+  while (priorityLevel != "Low" && priorityLevel != "Medium" && priorityLevel != "High") {
+	  std::cout << "Invalid priority level. Please enter Low, Medium, or High: ";
+	  std::getline(std::cin, priorityLevel);
+  }
 
   std::cout << "Task '" << task << "' created successfully!" << std::endl;  
   tasks.push_back(std::vector<std::string>{task, dueDate, priorityLevel}); // Use double braces to fix the initializer issue
@@ -144,11 +175,32 @@ void editTask(std::vector<std::vector<std::string>>& tasks)
 	std::string newDueDate;
 	std::getline(std::cin, newDueDate);
 
-	std::cout << "Enter the new priority level (Low, Medium, High): ";
-	std::string priorityLevel;
-	std::getline(std::cin, priorityLevel);
+	// Ensure that the user is typing the date in the proper format.
+	bool dateIsFormattedCorrectly = checkDateFormatting(newDueDate);
 
-	std::vector<std::string> newTaskArray = { newTask, newDueDate, priorityLevel };
+	if (dateIsFormattedCorrectly) {
+		std::cout << "Date formatted correctly." << std::endl;
+	}
+	else {
+		std::cout << "Date not formatted correctly. Please use the format YYYY-MM-DD." << std::endl;
+		while (dateIsFormattedCorrectly == false) {
+			std::cout << "Enter due date (YYYY-MM-DD): ";
+			std::getline(std::cin, newDueDate);
+			dateIsFormattedCorrectly = checkDateFormatting(newDueDate);
+		}
+	}
+
+	std::cout << "Enter priority level (Low, Medium, High): ";
+	std::string newPriorityLevel;
+	std::getline(std::cin, newPriorityLevel);
+
+	// Now check if user has entered a valid priority level.
+	while (newPriorityLevel != "Low" && newPriorityLevel != "Medium" && newPriorityLevel != "High") {
+		std::cout << "Invalid priority level. Please enter Low, Medium, or High: ";
+		std::getline(std::cin, newPriorityLevel);
+	}
+
+	std::vector<std::string> newTaskArray = { newTask, newDueDate, newPriorityLevel };
 
 	tasks[taskNumber - 1] = newTaskArray;
 	std::cout << "Task updated successfully!" << std::endl;
@@ -194,5 +246,4 @@ void viewTasks(std::vector<std::vector<std::string>>& tasks) {
 			<< std::right << std::setw(20) << tasks[i][2] << std::endl;
 	}
 }
-
 
