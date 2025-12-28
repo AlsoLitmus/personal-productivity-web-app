@@ -54,16 +54,17 @@ void displayMainMenu() {
 	std::cout << "2. Edit Task" << std::endl;
 	std::cout << "3. Delete Task" << std::endl;
 	std::cout << "4. View tasks" << std::endl;
-	std::cout << "5. Exit" << std::endl;
+	std::cout << "5. Mark a task as complete." << std::endl;
+	std::cout << "6. Exit" << std::endl;
 }
 
 int getChoice(std::vector<std::vector<std::string>>& tasks) {
 	int choice;
-	std::cout << "Enter your choice (1-5): ";
+	std::cout << "Enter your choice (1-6): ";
 	std::cin >> choice;
 
-	while (!std::cin >> choice || choice < 1 || choice > 5) {
-		std::cout << "Invalid input. Please enter a number between 1 and 5: ";
+	while (!std::cin >> choice || choice < 1 || choice > 6) {
+		std::cout << "Invalid input. Please enter a number between 1 and 6: ";
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin >> choice;
@@ -87,6 +88,11 @@ int getChoice(std::vector<std::vector<std::string>>& tasks) {
 		viewTasks(tasks);
 		break;
 	case 5:
+		std::cout << "Marking a task as complete..." << std::endl;
+		// Functionality to mark a task as complete would go here.
+		markComplete(tasks);
+		break;
+	case 6:
 		std::cout << "Exiting the program." << std::endl;
 		break;
 	default:
@@ -111,6 +117,7 @@ void createTask(std::vector<std::vector<std::string>> &tasks) {
   std::string task;  
   std::string dueDate;  
   std::string priorityLevel;
+  std::string status = "Incomplete";
 
   std::cout << "Enter a task: ";  
   std::cin.ignore();  
@@ -144,7 +151,7 @@ void createTask(std::vector<std::vector<std::string>> &tasks) {
   }
 
   std::cout << "Task '" << task << "' created successfully!" << std::endl;  
-  tasks.push_back(std::vector<std::string>{task, dueDate, priorityLevel}); // Use double braces to fix the initializer issue
+  tasks.push_back(std::vector<std::string>{task, dueDate, priorityLevel, status}); // Use double braces to fix the initializer issue
 }
 
 void editTask(std::vector<std::vector<std::string>>& tasks)
@@ -200,7 +207,8 @@ void editTask(std::vector<std::vector<std::string>>& tasks)
 		std::getline(std::cin, newPriorityLevel);
 	}
 
-	std::vector<std::string> newTaskArray = { newTask, newDueDate, newPriorityLevel };
+	std::string status = "Incomplete";
+	std::vector<std::string> newTaskArray = { newTask, newDueDate, newPriorityLevel, status };
 
 	tasks[taskNumber - 1] = newTaskArray;
 	std::cout << "Task updated successfully!" << std::endl;
@@ -232,6 +240,29 @@ void deleteTask(std::vector<std::vector<std::string>>& tasks) {
 
 }
 
+void markComplete(std::vector<std::vector<std::string>>& tasks) {
+	viewTasks(tasks);
+	int taskNumber;
+
+	std::cout << "Enter the number of the task you want to mark as complete: ";
+	std::cin >> taskNumber;
+
+	while (!std::cin >> taskNumber || taskNumber < 1 || taskNumber > tasks.size()) {
+		if (tasks.size() > 1) {
+			std::cout << "Invalid input. Please enter a number between 1 and " << tasks.size() << ": ";
+		}
+		else {
+			std::cout << "Invalid input. Please enter 1: ";
+		}
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin >> taskNumber;
+	}
+	std::cin.ignore();
+	tasks[taskNumber - 1][3] = "Complete";
+	std::cout << "Task marked as complete successfully!" << std::endl;
+}
+
 void viewTasks(std::vector<std::vector<std::string>>& tasks) {
 
 	if (tasks.empty()) {
@@ -239,11 +270,11 @@ void viewTasks(std::vector<std::vector<std::string>>& tasks) {
 		return;
 	}
 	std::cout << "\nHere are your current tasks:" << std::endl;
-	std::cout << std::setw(10) << std::left << "Task #" << std::left << std::setw(30) << "Tasks" << std::left << std::setw(10) << std::left << "Date Due" 
-		<< std::right << std::setw(20) << "Priority Level" << std::endl;
+	std::cout << std::setw(10) << std::left << "Task #" << std::left << std::setw(30) << "Tasks" << std::left << std::setw(20) << std::left << "Date Due" 
+		<< std::left << std::setw(20) << "Priority Level" << std::right << std::setw(10) << "Completion" << std::endl;
 	for (size_t i = 0; i < tasks.size(); ++i) {
-		std::cout << std::setw(10) << std::left << i + 1 << std::left << std::setw(30) << tasks[i][0] << std::left << std::setw(10) << std::left << tasks[i][1] 
-			<< std::right << std::setw(20) << tasks[i][2] << std::endl;
+		std::cout << std::setw(10) << std::left << i + 1 << std::left << std::setw(30) << tasks[i][0] << std::left << std::setw(20) << std::left << tasks[i][1] 
+			<< std::left << std::setw(20) << tasks[i][2] << std::right << std::setw(10) << tasks[i][3] << std::endl;
 	}
 }
 
