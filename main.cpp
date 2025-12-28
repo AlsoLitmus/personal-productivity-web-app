@@ -84,7 +84,7 @@ int main()
 
 				std::vector<std::vector<string>> tasks;
 				int chosenChoice = 0;
-				int EXIT_OPTION = 5;
+				int EXIT_OPTION = 6;
 
 				while (chosenChoice != EXIT_OPTION) {
 					displayMainMenu();
@@ -97,6 +97,4 @@ int main()
 		}
 	}	
 }
-
-
 
