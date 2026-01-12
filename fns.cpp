@@ -55,16 +55,17 @@ void displayMainMenu() {
 	std::cout << "3. Delete Task" << std::endl;
 	std::cout << "4. View tasks" << std::endl;
 	std::cout << "5. Mark a task as complete." << std::endl;
-	std::cout << "6. Exit" << std::endl;
+	std::cout << "6. Search for a task." << std::endl;
+	std::cout << "7. Exit" << std::endl;
 }
 
 int getChoice(std::vector<std::vector<std::string>>& tasks) {
 	int choice;
-	std::cout << "Enter your choice (1-6): ";
+	std::cout << "Enter your choice (1-7): ";
 	std::cin >> choice;
 
-	while (!std::cin >> choice || choice < 1 || choice > 6) {
-		std::cout << "Invalid input. Please enter a number between 1 and 6: ";
+	while (!std::cin >> choice || choice < 1 || choice > 7) {
+		std::cout << "Invalid input. Please enter a number between 1 and 7: ";
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		std::cin >> choice;
@@ -93,7 +94,12 @@ int getChoice(std::vector<std::vector<std::string>>& tasks) {
 		markComplete(tasks);
 		break;
 	case 6:
+		std::cout << "Searching for a task..." << std::endl;
+		searchForTasks(tasks);
+		break;
+	case 7:
 		std::cout << "Exiting the program." << std::endl;
+		exitProgram();
 		break;
 	default:
 		std::cout << "Invalid choice. Please try again." << std::endl;
@@ -101,6 +107,11 @@ int getChoice(std::vector<std::vector<std::string>>& tasks) {
 		break;
 	}
 	return choice;
+}
+
+int exitProgram() {
+	std::exit(0);
+	return 0;
 }
 
 bool checkDateFormatting(const std::string& date) {
@@ -244,6 +255,12 @@ void markComplete(std::vector<std::vector<std::string>>& tasks) {
 	viewTasks(tasks);
 	int taskNumber;
 
+	// check if we have any available tasks before allowing user to mark one as complete
+	if (tasks.empty()) {
+		std::cout << "No tasks available to mark as complete." << std::endl;
+		return;
+	}
+
 	std::cout << "Enter the number of the task you want to mark as complete: ";
 	std::cin >> taskNumber;
 
@@ -275,6 +292,37 @@ void viewTasks(std::vector<std::vector<std::string>>& tasks) {
 	for (size_t i = 0; i < tasks.size(); ++i) {
 		std::cout << std::setw(10) << std::left << i + 1 << std::left << std::setw(30) << tasks[i][0] << std::left << std::setw(20) << std::left << tasks[i][1] 
 			<< std::left << std::setw(20) << tasks[i][2] << std::right << std::setw(10) << tasks[i][3] << std::endl;
+	}
+}
+
+void searchForTasks(std::vector<std::vector<std::string>>& tasks) {
+	std::string word;
+	int numInstancesFound = 0;
+	std::cout << "\nEnter a word to search for in your list of tasks: ";
+	std::cin.ignore();
+	std::getline(std::cin, word);
+	std::cout << "Search Results: \n";
+
+	if (word == "" || word == " ") {
+		std::cout << "No search results available." << std::endl;
+		return;
+	}
+
+	// Loop through out list of tasks.
+	for (std::vector<std::string> task : tasks) {
+		std::string taskName = task[0];
+		std::size_t foundPos = taskName.find(word);
+
+		// Check if the return value is NOT std::string::npos
+		if (foundPos != std::string::npos) {
+			//std::cout << "The word was found at position: " << foundPos << std::endl;
+			std::cout << taskName << std::endl;
+			numInstancesFound++;
+		}
+	}
+
+	if (!numInstancesFound) {
+		std::cout << "No search results available." << std::endl;
 	}
 }
 
